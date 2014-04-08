@@ -29,8 +29,6 @@ module.exports =
     matches = @matchesOnLine(line, cursorRow)
     matchAtPos = @matchAtPosition cursorColumn, matches
 
-    console.log line, cursorRow, cursorColumn, matches, matchAtPos
-
     return matchAtPos
 
   matchesOnLine: (line, cursorRow) ->
@@ -80,3 +78,7 @@ module.exports =
     return _match
 
   open: (getMatch = false) ->
+    @match = @getMatchAtCursor() if getMatch
+
+    return unless @match
+    console.log @match
