@@ -1,0 +1,13 @@
+{
+  "name": "bezier-curve-editor",
+  "main": "./lib/bezier-curve-editor",
+  "version": "0.0.0",
+  "description": "A short description of your package",
+  "repository": "https://github.com/abe33/atom-bezier-curve-editor",
+  "license": "MIT",
+  "engines": {
+    "atom": ">0.50.0"
+  },
+  "dependencies": {
+  }
+}
