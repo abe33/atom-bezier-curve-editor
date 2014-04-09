@@ -1,4 +1,4 @@
-class UnitBezier
+class module.exports.UnitBezier
   constructor: (p1x, p1y, p2x, p2y) ->
 
     # pre-calculate the polynomial coefficients
@@ -62,14 +62,9 @@ class UnitBezier
   solve: (x, epsilon) ->
     @sampleCurveY @solveCurveX(x, epsilon)
 
-module.exports.keySpline = (m_x1, m_y1, m_x2, m_y2) ->
-  spline = new UnitBezier m_x1, m_y1, m_x2, m_y2
-
-  return (x) -> spline.solve x, spline.epsilon
-
 module.exports.easing =
-  ease: module.exports.keySpline(0.25, 0.1, 0.25, 1.0)
-  linear: module.exports.keySpline(0.00, 0.0, 1.00, 1.0)
-  ease_in: module.exports.keySpline(0.42, 0.0, 1.00, 1.0)
-  ease_out: module.exports.keySpline(0.00, 0.0, 0.58, 1.0)
-  ease_in_out: module.exports.keySpline(0.42, 0.0, 0.58, 1.0)
+  ease: [0.25, 0.1, 0.25, 1.0]
+  linear: [0.00, 0.0, 1.00, 1.0]
+  ease_in: [0.42, 0.0, 1.00, 1.0]
+  ease_out: [0.00, 0.0, 0.58, 1.0]
+  ease_in_out: [0.42, 0.0, 0.58, 1.0]

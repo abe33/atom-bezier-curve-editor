@@ -2,7 +2,6 @@ Debug = require 'prolix'
 
 BezierCurveEditorView = require './bezier-curve-editor-view'
 ConditionalContextMenu = require './conditional-contextmenu'
-{keySpline, easing} = require './bezier-functions'
 
 module.exports = new
 class BezierCurveEditor
@@ -109,6 +108,6 @@ class BezierCurveEditor
 
     @log a1,a2,a3,a4
 
-    @view.setSpline keySpline(a1, a2, a3, a4)
+    @view.setSpline(a1, a2, a3, a4)
     @view.renderSpline()
     @view.open()
