@@ -3,7 +3,7 @@ module.exports =
   # Add a context menu item and show it or not based on a condition
   # @Object definition { label: '', command: '' }
   # @Function condition
-  item: (definition, condition) -> atom.workspaceView.contextmenu =>
+  item: (definition, condition) -> atom.workspaceView.contextmenu ->
     _label = definition.label
     _command = definition.command
 

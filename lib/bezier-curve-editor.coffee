@@ -1,21 +1,35 @@
+Debug = require 'prolix'
+
 BezierCurveEditorView = require './bezier-curve-editor-view'
 ConditionalContextMenu = require './conditional-contextmenu'
+{keySpline, easing} = require './bezier-functions'
 
-module.exports =
+module.exports = new
+class BezierCurveEditor
+  Debug('bezier-curve-editor', true).includeInto(this)
+
   view: null
   match: null
+  active: false
 
   activate: ->
+    return if @active
+
+    @active = true
     atom.workspaceView.command "bezier-curve-editor:open", => @open true
 
     ConditionalContextMenu.item {
-        label: 'Edit Bezier Curve'
-        command: 'bezier-curve-editor:open',
+      label: 'Edit Bezier Curve'
+      command: 'bezier-curve-editor:open',
     }, => return true if @match = @getMatchAtCursor()
 
     @view = new BezierCurveEditorView
 
-  deactivate: -> @view.destroy()
+  deactivate: ->
+    return unless @active
+
+    @active = false
+    @view.destroy()
 
   getMatchAtCursor: ->
     editor = atom.workspace.getActiveEditor()
@@ -78,7 +92,19 @@ module.exports =
     return _match
 
   open: (getMatch = false) ->
+
     @match = @getMatchAtCursor() if getMatch
 
-    return unless @match
-    console.log @match
+    return unless @match?
+
+    [m, a1, _, a2, _, a3, _, a4] = @match.regexMatch
+
+    [a1, a2, a3, a4] = [
+      parseInt a1
+      parseInt a2
+      parseInt a3
+      parseInt a4
+    ]
+
+    @view.setSpline keySpline(a1, a2, a3, a4).toString()
+    @view.open()

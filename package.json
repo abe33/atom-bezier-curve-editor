@@ -9,5 +9,9 @@
     "atom": ">0.50.0"
   },
   "dependencies": {
+    "delegato": "1.x",
+    "mixto": "1.x",
+    "emissary": "1.x",
+    "prolix": "1.x"
   }
 }

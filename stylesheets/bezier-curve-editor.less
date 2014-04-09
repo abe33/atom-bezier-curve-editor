@@ -6,4 +6,14 @@
 
 .bezier-curve-editor {
   transition: all 0.3s cubic-bezier(0.2, 0, 0.8, 1);
+  background: @overlay-background-color;
+
+  position: absolute;
+  top: 50%;
+  left: 20px;
+
+  canvas {
+    width: 200px;
+    height: 200px;
+  }
 }

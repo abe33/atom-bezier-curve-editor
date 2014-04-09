@@ -1,24 +1,35 @@
-{View} = require 'atom'
+{$, View} = require 'atom'
+Delegator = require 'delegato'
+CurveView = require './curve-view'
 
 module.exports =
 class BezierCurveEditorView extends View
+  Delegator.includeInto(this)
+
   @content: ->
-    @div class: 'bezier-curve-editor overlay from-top', =>
-      @div "The BezierCurveEditor package is Alive! It's ALIVE!", class: "message"
+    @div class: 'bezier-curve-editor', =>
+      @subview 'curveView', new CurveView()
+
+  @delegatesMethods 'setSpline', 'renderSpline', toProperty: 'curveView'
 
   initialize: (serializeState) ->
     atom.workspaceView.command "bezier-curve-editor:toggle", => @toggle()
 
-  # Returns an object that can be retrieved when package is activated
-  serialize: ->
+  open: ->
+    @attach()
 
-  # Tear down any state and detach
-  destroy: ->
-    @detach()
+    @subscribeToOutsideEvent()
 
-  toggle: ->
-    console.log "BezierCurveEditorView was toggled!"
-    if @hasParent()
-      @detach()
-    else
-      atom.workspaceView.append(this)
+  subscribeToOutsideEvent: ->
+    $body = @parents('body')
+
+    @subscribe $body, 'mousedown', @closeIfClickedOutside
+
+  closeIfClickedOutside: (e) =>
+    $target = $(e.target)
+
+    @close() if $target.parents('.bezier-curve-editor').length is 0
+
+  attach: -> atom.workspaceView.find('.vertical').append(this)
+  close: -> @detach()
+  destroy: -> @close()
