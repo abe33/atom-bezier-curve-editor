@@ -13,6 +13,18 @@ class CurveView extends View
   setSpline: (@spline) ->
 
   renderSpline: ->
+    statusBar = atom.workspaceView.find('.status-bar')
+    @context.fillStyle = statusBar.css('background-color')
+    @context.fillRect(0, 0, 200, 200)
+
+    @context.strokeStyle = atom.workspaceView.css('color')
+    @context.beginPath()
+    @context.moveTo(50, 50)
+    @context.lineTo(50, 150)
+    @context.lineTo(150, 150)
+    @context.lineTo(150, 50)
+    @context.stroke()
+
     @context.strokeStyle = '#ff0000'
     @context.beginPath()
     @context.moveTo(50, 150)
@@ -23,4 +35,3 @@ class CurveView extends View
       @context.lineTo(x, y)
 
     @context.stroke()
-    @context.closePath()

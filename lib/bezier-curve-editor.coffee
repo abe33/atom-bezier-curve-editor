@@ -101,11 +101,13 @@ class BezierCurveEditor
     [m, a1, _, a2, _, a3, _, a4] = @match.regexMatch
 
     [a1, a2, a3, a4] = [
-      parseInt a1
-      parseInt a2
-      parseInt a3
-      parseInt a4
+      parseFloat a1
+      parseFloat a2
+      parseFloat a3
+      parseFloat a4
     ]
+
+    @log a1,a2,a3,a4
 
     @view.setSpline keySpline(a1, a2, a3, a4)
     @view.renderSpline()
