@@ -28,6 +28,7 @@ class CurveView extends View
     @context.lineTo(50, 150)
     @context.lineTo(150, 150)
     @context.lineTo(150, 50)
+    @context.lineTo(50, 50)
     @context.stroke()
 
   updateDummies: ->
@@ -42,6 +43,7 @@ class CurveView extends View
   renderControls: ->
     statusBar = atom.workspaceView.find('.status-bar')
     @context.strokeStyle = statusBar.css('color')
+
     @context.beginPath()
     @context.moveTo(50, 150)
     @context.lineTo(50 + @x1 * 100, 150 - @y1 * 100)
