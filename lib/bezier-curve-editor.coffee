@@ -85,11 +85,12 @@ class BezierCurveEditor
   matchAtPosition: (column, matches) ->
     return unless column and matches
 
-    _match = do ->
-      for match in matches
-        return match if match.index <= column and match.end >= column
+    for match in matches
+      if match.index <= column and match.end >= column
+        matchResults = match
+        break
 
-    return _match
+    return matchResults
 
   open: (getMatch = false) ->
 
