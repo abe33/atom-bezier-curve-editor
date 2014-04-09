@@ -107,5 +107,6 @@ class BezierCurveEditor
       parseInt a4
     ]
 
-    @view.setSpline keySpline(a1, a2, a3, a4).toString()
+    @view.setSpline keySpline(a1, a2, a3, a4)
+    @view.renderSpline()
     @view.open()

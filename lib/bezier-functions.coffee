@@ -1,37 +1,71 @@
+class UnitBezier
+  constructor: (p1x, p1y, p2x, p2y) ->
 
-module.exports.keySpline = (m_x1, m_y1, m_x2, m_y2) ->
-  # linear
-  A = (a1, a2) ->
-    1.0 - 3.0 * a2 + 3.0 * a1
-  B = (a1, a2) ->
-    3.0 * a2 - 6.0 * a1
-  C = (a1) ->
-    3.0 * a1
+    # pre-calculate the polynomial coefficients
+    # First and last control points are implied to be (0,0) and (1.0, 1.0)
+    @cx = 3.0 * p1x
+    @bx = 3.0 * (p2x - p1x) - @cx
+    @ax = 1.0 - @cx - @bx
+    @cy = 3.0 * p1y
+    @by = 3.0 * (p2y - p1y) - @cy
+    @ay = 1.0 - @cy - @by
+  epsilon: 1e-6 # Precision
+  sampleCurveX: (t) ->
+    ((@ax * t + @bx) * t + @cx) * t
 
-  # Returns x(t) given t, x1, and x2, or y(t) given t, y1, and y2.
-  calcBezier = (a_t, a1, a2) ->
-    ((A(a1, a2) * a_t + B(a1, a2)) * a_t + C(a1)) * a_t
+  sampleCurveY: (t) ->
+    ((@ay * t + @by) * t + @cy) * t
 
-  # Returns dx/dt given t, x1, and x2, or dy/dt given t, y1, and y2.
-  getSlope = (a_t, a1, a2) ->
-    3.0 * A(a1, a2) * a_t * a_t + 2.0 * B(a1, a2) * a_t + C(a1)
+  sampleCurveDerivativeX: (t) ->
+    (3.0 * @ax * t + 2.0 * @bx) * t + @cx
 
-  getTForX = (a_x) ->
-    # Newton raphson iteration
-    guessT = a_x
+  solveCurveX: (x, epsilon) ->
+    t0 = undefined
+    t1 = undefined
+    t2 = undefined
+    x2 = undefined
+    d2 = undefined
+    i = undefined
+
+    # First try a few iterations of Newton's method -- normally very fast.
+    t2 = x
     i = 0
 
-    while i < 4
-      currentSlope = getSlope(guessT, m_x1, m_x2)
-      return guessT if currentSlope is 0.0
-      currentX = calcBezier(guessT, m_x1, m_x2) - a_x
-      guessT -= currentX / currentSlope
-      ++i
-    guessT
+    while i < 8
+      x2 = @sampleCurveX(t2) - x
+      return t2  if Math.abs(x2) < epsilon
+      d2 = @sampleCurveDerivativeX(t2)
+      break  if Math.abs(d2) < epsilon
+      t2 = t2 - x2 / d2
+      i++
 
-  return (a_x) ->
-    return a_x if m_x1 is m_y1 and m_x2 is m_y2
-    calcBezier getTForX(a_x), m_y1, m_y2
+    # No solution found - use bi-section
+    t0 = 0.0
+    t1 = 1.0
+    t2 = x
+    return t0  if t2 < t0
+    return t1  if t2 > t1
+    while t0 < t1
+      x2 = @sampleCurveX(t2)
+      return t2  if Math.abs(x2 - x) < epsilon
+      if x > x2
+        t0 = t2
+      else
+        t1 = t2
+      t2 = (t1 - t0) * .5 + t0
+
+    # Give up
+    t2
+
+
+  # Find new T as a function of Y along curve X
+  solve: (x, epsilon) ->
+    @sampleCurveY @solveCurveX(x, epsilon)
+
+module.exports.keySpline = (m_x1, m_y1, m_x2, m_y2) ->
+  spline = new UnitBezier m_x1, m_y1, m_x2, m_y2
+
+  return (x) -> spline.solve x, spline.epsilon
 
 module.exports.easing =
   ease: module.exports.keySpline(0.25, 0.1, 0.25, 1.0)
