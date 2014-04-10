@@ -106,8 +106,6 @@ class BezierCurveEditor
       parseFloat a4
     ]
 
-    @log a1,a2,a3,a4
-
     @view.setSpline(a1, a2, a3, a4)
     @view.renderSpline()
     @view.open()
