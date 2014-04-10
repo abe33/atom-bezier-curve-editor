@@ -59,3 +59,4 @@ class BezierCurveEditorView extends View
 
   close: -> @detach()
   destroy: -> @close()
+  getModel: -> {}
