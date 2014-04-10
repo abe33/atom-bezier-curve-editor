@@ -1,11 +1,12 @@
 Debug = require 'prolix'
-
+{Subscriber} = require 'emissary'
 BezierCurveEditorView = require './bezier-curve-editor-view'
 ConditionalContextMenu = require './conditional-contextmenu'
 
 module.exports = new
 class BezierCurveEditor
   Debug('bezier-curve-editor', true).includeInto(this)
+  Subscriber.includeInto(this)
 
   view: null
   match: null
@@ -23,6 +24,12 @@ class BezierCurveEditor
     }, => return true if @match = @getMatchAtCursor()
 
     @view = new BezierCurveEditorView
+
+    @subscribe @view.cancelButton, 'click', => @view.close()
+    @subscribe @view.validateButton, 'click', =>
+      spline = @view.getSpline()
+      @replaceMatch(spline)
+      @view.close()
 
   deactivate: ->
     return unless @active
@@ -64,7 +71,6 @@ class BezierCurveEditor
     return unless matches?
 
     for match in matches
-      # Skip if the match has “been used” already
       continue if (index = line.indexOf match) is -1
 
       filteredMatches.push
@@ -74,8 +80,6 @@ class BezierCurveEditor
         end: index + match.length
         row: cursorRow
 
-      # Make sure the indices are correct by removing
-      # the instances from the string after use
       line = line.replace match, (Array match.length + 1).join ' '
 
     return unless filteredMatches.length
@@ -91,6 +95,40 @@ class BezierCurveEditor
 
     return matchResults
 
+  selectMatch: ->
+    editor = atom.workspace.getActiveEditor()
+
+    editor.clearSelections()
+    editor.addSelectionForBufferRange
+      start:
+        column: @match.index
+        row: @match.row
+      end:
+        column: @match.end
+        row: @match.row
+
+  replaceMatch: (spline) ->
+    return unless @match?
+
+    editor = atom.workspace.getActiveEditor()
+    splineCSS = @getSplineCSS(spline)
+    editor.replaceSelectedText null, -> splineCSS
+
+    editor.clearSelections()
+    editor.addSelectionForBufferRange
+      start:
+        column: @match.index
+        row: @match.row
+      end:
+        column: @match.index + splineCSS.length
+        row: @match.row
+
+  getSplineCSS: (spline) ->
+    precision = 100000
+    spline = spline.map (n) -> Math.floor(n * precision) / precision
+    
+    "cubic-bezier(#{ spline.join ', ' })"
+
   open: (getMatch = false) ->
 
     @match = @getMatchAtCursor() if getMatch
@@ -98,7 +136,6 @@ class BezierCurveEditor
     return unless @match?
 
     [m, a1, _, a2, _, a3, _, a4] = @match.regexMatch
-
     [a1, a2, a3, a4] = [
       parseFloat a1
       parseFloat a2
@@ -109,3 +146,5 @@ class BezierCurveEditor
     @view.setSpline(a1, a2, a3, a4)
     @view.renderSpline()
     @view.open()
+
+    @selectMatch()

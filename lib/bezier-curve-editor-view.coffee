@@ -10,7 +10,11 @@ class BezierCurveEditorView extends View
     @div class: 'bezier-curve-editor overlay', =>
       @subview 'curveView', new CurveView()
 
-  @delegatesMethods 'setSpline', 'renderSpline', toProperty: 'curveView'
+      @div class: 'btn-group', =>
+        @button outlet: 'cancelButton', class: 'btn', 'Cancel'
+        @button outlet: 'validateButton', class: 'btn', 'Validate'
+
+  @delegatesMethods 'getSpline', 'setSpline', 'renderSpline', toProperty: 'curveView'
 
   initialize: (serializeState) ->
     atom.workspaceView.command "bezier-curve-editor:toggle", => @toggle()
@@ -22,13 +26,14 @@ class BezierCurveEditorView extends View
 
     view = atom.workspaceView.getActiveView()
 
-
-    position = view.pixelPositionForScreenPosition view.editor.getCursorScreenPosition()
+    cursor = view.editor.getCursorScreenPosition()
+    position = view.pixelPositionForScreenPosition cursor
     offset = view.offset()
+    gutterWidth = view.find('.gutter').width()
 
     @css
       top: position.top + offset.top + view.lineHeight + 15
-      left: position.left + offset.left + view.find('.gutter').width() - @width() / 2
+      left: position.left + offset.left + gutterWidth - @width() / 2
 
   subscribeToOutsideEvent: ->
     $body = @parents('body')
