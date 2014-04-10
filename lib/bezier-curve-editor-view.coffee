@@ -7,7 +7,7 @@ class BezierCurveEditorView extends View
   Delegator.includeInto(this)
 
   @content: ->
-    @div class: 'bezier-curve-editor', =>
+    @div class: 'bezier-curve-editor overlay', =>
       @subview 'curveView', new CurveView()
 
   @delegatesMethods 'setSpline', 'renderSpline', toProperty: 'curveView'
@@ -20,6 +20,16 @@ class BezierCurveEditorView extends View
 
     @subscribeToOutsideEvent()
 
+    view = atom.workspaceView.getActiveView()
+
+
+    position = view.pixelPositionForScreenPosition view.editor.getCursorScreenPosition()
+    offset = view.offset()
+
+    @css
+      top: position.top + offset.top + view.lineHeight + 15
+      left: position.left + offset.left + view.find('.gutter').width() - @width() / 2
+
   subscribeToOutsideEvent: ->
     $body = @parents('body')
 
@@ -30,6 +40,6 @@ class BezierCurveEditorView extends View
 
     @close() if $target.parents('.bezier-curve-editor').length is 0
 
-  attach: -> atom.workspaceView.find('.vertical').append(this)
+  attach: -> atom.workspaceView.append(this)
   close: -> @detach()
   destroy: -> @close()
