@@ -7,6 +7,7 @@
 .foo {
   transition: all 0.3s cubic-bezier(0.35, 0.77, 0.62, 0.28);
 }
+
 .bezier-curve-editor.overlay {
   position: absolute;
   width: auto;
@@ -28,8 +29,17 @@
     z-index: 1;
   }
 
+  &.arrow-down {
+    &:before {
+      top: initial;
+      bottom: -7px;
+    }
+  }
+
   .btn-group {
     display: block;
+    position: relative;
+    z-index: 2;
     .btn {
       width: 50%;
     }
@@ -50,7 +60,6 @@
       cursor: -webkit-grabbing;
     }
   }
-
   canvas {
     width: 200px;
     height: 200px;

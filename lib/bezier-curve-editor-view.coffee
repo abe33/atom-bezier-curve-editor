@@ -23,6 +23,7 @@ class BezierCurveEditorView extends View
     @attach()
 
     @subscribeToOutsideEvent()
+    @removeClass('arrow-down')
 
     view = atom.workspaceView.getActiveView()
 
@@ -31,20 +32,30 @@ class BezierCurveEditorView extends View
     offset = view.offset()
     gutterWidth = view.find('.gutter').width()
 
-    @css
-      top: position.top + offset.top + view.lineHeight + 15
-      left: position.left + offset.left + gutterWidth - @width() / 2
+    top = position.top + view.lineHeight + 15
+    left = position.left + gutterWidth - @width() / 2
+
+    if top + @height() > @parent().height()
+      top = position.top - 15 - @height()
+      @addClass('arrow-down')
+
+    @css {top, left}
 
   subscribeToOutsideEvent: ->
     $body = @parents('body')
 
+    @on 'mousedown', (e) -> e.stopImmediatePropagation()
     @subscribe $body, 'mousedown', @closeIfClickedOutside
 
   closeIfClickedOutside: (e) =>
     $target = $(e.target)
 
+    console.log e.target
+
     @close() if $target.parents('.bezier-curve-editor').length is 0
 
-  attach: -> atom.workspaceView.append(this)
+  attach: ->
+    atom.workspaceView.getActiveView().overlayer.append(this)
+
   close: -> @detach()
   destroy: -> @close()
