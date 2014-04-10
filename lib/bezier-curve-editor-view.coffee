@@ -1,6 +1,7 @@
 {$, View} = require 'atom'
 Delegator = require 'delegato'
 CurveView = require './curve-view'
+{easing} = require './bezier-functions'
 
 module.exports =
 class BezierCurveEditorView extends View
@@ -10,7 +11,11 @@ class BezierCurveEditorView extends View
     @div class: 'bezier-curve-editor overlay', =>
       @subview 'curveView', new CurveView()
 
-      @div class: 'btn-group', =>
+      @div class: 'patterns btn-group', =>
+        for name,spline of easing
+          @button outlet: name, class: 'btn btn-xs', name.replace('_', '-')
+
+      @div class: 'actions btn-group', =>
         @button outlet: 'cancelButton', class: 'btn', 'Cancel'
         @button outlet: 'validateButton', class: 'btn', 'Validate'
 
@@ -18,6 +23,11 @@ class BezierCurveEditorView extends View
 
   initialize: (serializeState) ->
     atom.workspaceView.command "bezier-curve-editor:toggle", => @toggle()
+
+    Object.keys(easing).forEach (name) =>
+      @subscribe @[name], 'click', =>
+        @setSpline.apply this, easing[name]
+        @renderSpline()
 
   open: ->
     @attach()
@@ -49,8 +59,6 @@ class BezierCurveEditorView extends View
 
   closeIfClickedOutside: (e) =>
     $target = $(e.target)
-
-    console.log e.target
 
     @close() if $target.parents('.bezier-curve-editor').length is 0
 
