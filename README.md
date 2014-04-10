@@ -1,5 +1,10 @@
 # bezier-curve-editor package
 
-A short description of your package.
+Edit CSS Bezier curves directly in Atom. Either right click on a `cubic-bezier` declaration or trigger `ctrl + alt + B` when the cursor is in a declaration.
 
-![A screenshot of your spankin' package](https://f.cloud.github.com/assets/69169/2290250/c35d867a-a017-11e3-86be-cd7c5bf3ff9b.gif)
+![Editor Demo](https://github.com/abe33/atom-bezier-curve-editor/blob/master/screenshot.gif?raw=true)
+
+### TODO
+
+ - Common patterns preselection
+ - Preview curve in animation
