@@ -44,6 +44,11 @@
     background: @text-color-highlight;
     border-radius: 50%;
     z-index: 3;
+    cursor: -webkit-grab;
+
+    &:active {
+      cursor: -webkit-grabbing;
+    }
   }
 
   canvas {
