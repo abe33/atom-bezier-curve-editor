@@ -6,5 +6,4 @@ Edit CSS Bezier curves directly in Atom. Either right click on a `cubic-bezier` 
 
 ### TODO
 
- - Common patterns preselection
  - Preview curve in animation
