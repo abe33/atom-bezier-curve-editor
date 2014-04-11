@@ -1,12 +1,45 @@
-// The ui-variables file is provided by base themes provided by Atom.
-//
-// See https://github.com/atom/atom-dark-ui/blob/master/stylesheets/ui-variables.less
-// for a full listing of what's available.
+
 @import "ui-variables";
 
 .foo {
   transition: all 0.3s cubic-bezier(0.35, 0.77, 0.62, 0.28);
 }
+
+@font-face {
+	font-family: 'css-easing';
+	src:url('atom://atom-bezier-curve-editor/resources/css-easing.woff') format('woff');
+	font-weight: normal;
+	font-style: normal;
+}
+
+[class^="easing-"], [class*=" easing-"] {
+	font-family: 'css-easing';
+	speak: none;
+	font-style: normal;
+	font-weight: normal;
+	font-variant: normal;
+	text-transform: none;
+	line-height: 1;
+
+	-webkit-font-smoothing: antialiased;
+}
+
+.easing-linear:before {
+	content: "\e600";
+}
+.easing-ease:before {
+	content: "\e601";
+}
+.easing-ease-out:before {
+	content: "\e602";
+}
+.easing-ease-in:before {
+	content: "\e603";
+}
+.easing-ease-in-out:before {
+	content: "\e604";
+}
+
 
 .bezier-curve-editor.overlay {
   position: absolute;
@@ -38,8 +71,21 @@
 
   .patterns {
     display: block;
+    margin: 4px;
+    overflow: hidden;
     .btn {
       width: 20%;
+
+      & + .btn {
+        width: -webkit-calc(~'20% + 1px');
+      }
+
+      i {
+        font-size: 20px;
+        font-weight: bold;
+        color: red;
+        border: 1px solid @text-color-subtle;
+      }
     }
   }
   .actions {

@@ -13,7 +13,8 @@ class BezierCurveEditorView extends View
 
       @div class: 'patterns btn-group', =>
         for name,spline of easing
-          @button outlet: name, class: 'btn btn-xs', name.replace('_', '-')
+          @button outlet: name, class: 'btn btn-sm', =>
+            @i class: 'easing-' + name.replace(/_/g, '-')
 
       @div class: 'actions btn-group', =>
         @button outlet: 'cancelButton', class: 'btn', 'Cancel'
@@ -25,7 +26,9 @@ class BezierCurveEditorView extends View
     atom.workspaceView.command "bezier-curve-editor:toggle", => @toggle()
 
     Object.keys(easing).forEach (name) =>
-      @subscribe @[name], 'click', =>
+      button = @[name]
+      button.setTooltip(name.replace /_/g, '-')
+      @subscribe button, 'click', =>
         @setSpline.apply this, easing[name]
         @renderSpline()
 
