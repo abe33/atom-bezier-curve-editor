@@ -1,6 +1,7 @@
 {$, View} = require 'atom'
 Delegator = require 'delegato'
 CurveView = require './curve-view'
+BezierTimingView = require './bezier-timing-view'
 {easing} = require './bezier-functions'
 
 module.exports =
@@ -10,6 +11,7 @@ class BezierCurveEditorView extends View
   @content: ->
     @div class: 'bezier-curve-editor overlay', =>
       @subview 'curveView', new CurveView()
+      @subview 'timingView', new BezierTimingView()
 
       @div class: 'patterns btn-group', =>
         for name,spline of easing
@@ -25,11 +27,15 @@ class BezierCurveEditorView extends View
   initialize: (serializeState) ->
     atom.workspaceView.command "bezier-curve-editor:toggle", => @toggle()
 
+    @curveView.on 'spline:changed', =>
+      @timingView.setSpline @curveView.getSpline()
+
     Object.keys(easing).forEach (name) =>
       button = @[name]
       button.setTooltip(name.replace /_/g, '-')
       @subscribe button, 'click', =>
         @setSpline.apply this, easing[name]
+        @timingView.setSpline easing[name]
         @renderSpline()
 
   open: ->
@@ -53,6 +59,9 @@ class BezierCurveEditorView extends View
       @addClass('arrow-down')
 
     @css {top, left}
+    # @timingView.durationEditor.focus()
+    @timingView.setSpline @getSpline()
+
 
   subscribeToOutsideEvent: ->
     $body = @parents('body')

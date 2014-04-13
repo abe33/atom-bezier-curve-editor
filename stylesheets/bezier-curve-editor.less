@@ -12,6 +12,15 @@
 	font-style: normal;
 }
 
+@-webkit-keyframes preview {
+  0% {
+    -webkit-transform: translate(0,0);
+  }
+  100% {
+    -webkit-transform: translate(90%,0);
+  }
+}
+
 [class^="easing-"], [class*=" easing-"] {
 	font-family: 'css-easing';
 	speak: none;
@@ -70,7 +79,35 @@
   }
 
   .btn {
-    font-family: 'Lucida Grande', 'Segoe UI', sans-serif; 
+    font-family: 'Lucida Grande', 'Segoe UI', sans-serif;
+  }
+
+  .bezier-timing-preview {
+    margin: 0 4px;
+
+    .bezier-timing-ramp {
+      background: @base-background-color;
+      border: 1px solid @base-border-color;
+      height: 8px;
+      box-sizing: border-box;
+
+      .bezier-timing-dummy {
+        height: 100%;
+
+        &:before {
+          content: '';
+          display: block;
+          width: 10%;
+          height: 100%;
+          background: red;
+        }
+      }
+
+    }
+
+    .editor {
+      margin: 0;
+    }
   }
 
   .patterns {

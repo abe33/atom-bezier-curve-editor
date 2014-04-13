@@ -20,14 +20,14 @@ class CurveControlView extends View
 
   onMouseDown: (e) =>
     @dragging = true
-    @trigger('dragstart', @getMousePosition(e))
+    @trigger('drag:start', @getMousePosition(e))
 
   onMouseMove: (e) =>
     if @dragging
       @trigger('drag', @getMousePosition(e))
 
   onMouseUp: (e) =>
-    @trigger('dragend', @getMousePosition(e)) if @dragging
+    @trigger('drag:end', @getMousePosition(e)) if @dragging
     @dragging = false
 
   getMousePosition: (e) ->

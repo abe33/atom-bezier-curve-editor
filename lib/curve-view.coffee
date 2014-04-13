@@ -29,6 +29,9 @@ class CurveView extends View
   initialize: ->
     @subscribe @dummy1, 'drag', @control1Changed
     @subscribe @dummy2, 'drag', @control2Changed
+    
+    @subscribe @dummy1, 'drag:end', => @trigger 'spline:changed'
+    @subscribe @dummy2, 'drag:end', => @trigger 'spline:changed'
 
   constructor: ->
     super
