@@ -25,8 +25,6 @@ class BezierCurveEditorView extends View
   @delegatesMethods 'getSpline', 'setSpline', 'renderSpline', toProperty: 'curveView'
 
   initialize: (serializeState) ->
-    atom.workspaceView.command "bezier-curve-editor:toggle", => @toggle()
-
     @curveView.on 'spline:changed', =>
       @timingView.setSpline @curveView.getSpline()
 
@@ -62,6 +60,9 @@ class BezierCurveEditorView extends View
     # @timingView.durationEditor.focus()
     @timingView.setSpline @getSpline()
 
+    @curveView.dummy1.activate()
+    @curveView.dummy2.activate()
+
 
   subscribeToOutsideEvent: ->
     $body = @parents('body')
@@ -77,6 +78,10 @@ class BezierCurveEditorView extends View
   attach: ->
     atom.workspaceView.getActiveView().overlayer.append(this)
 
-  close: -> @detach()
+  close: ->
+    @detach()
+    @curveView.dummy1.deactivate()
+    @curveView.dummy2.deactivate()
+
   destroy: -> @close()
   getModel: -> {}

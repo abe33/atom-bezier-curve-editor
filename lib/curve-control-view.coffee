@@ -9,14 +9,18 @@ class CurveControlView extends View
   constructor: (@minX, @maxX, @minY, @maxY) ->
     super
 
-  initialize: ->
+  activate: ->
     @on 'mousedown', @onMouseDown
     @subscribe $('body'), 'mousemove', @onMouseMove
     @subscribe $('body'), 'mouseup', @onMouseUp
 
-  destroy: ->
+  deactivate: ->
     @off
     @unsubscribe()
+
+  destroy: ->
+    @deactivate()
+    @detach()
 
   onMouseDown: (e) =>
     @dragging = true

@@ -3,16 +3,14 @@ module.exports =
   # Add a context menu item and show it or not based on a condition
   # @Object definition { label: '', command: '' }
   # @Function condition
-  item: (definition, condition) -> atom.workspaceView.contextmenu ->
-    _label = definition.label
-    _command = definition.command
+  item: (definition, condition) ->
+    atom.workspaceView.contextmenu ->
+      {label, command} = definition
 
-    _definitions = atom.contextMenu.definitions['.overlayer']
-    _hasItem = true for item in _definitions when item.label is _label and item.command is _command
+      definitions = atom.contextMenu.definitions['.overlayer']
+      hasItem = true for item in definitions when item.label is label and item.command is xcommand
 
-    if condition() then unless _hasItem
-      _definitions.unshift
-        label: _label
-        command: _command
-    else for item, i in _definitions when item
-      _definitions.splice i, 1 if item.label is _label
+      if condition()
+        definitions.unshift {label, command} unless hasItem
+      else for item, i in definitions when item
+        definitions.splice i, 1 if item.label is label
