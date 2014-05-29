@@ -52,7 +52,7 @@ class BezierCurveEditorView extends View
     top = position.top + view.lineHeight + 15
     left = position.left + gutterWidth - @width() / 2
 
-    if top + @height() > @parent().height()
+    if top + @height() > @parents('.scroll-view').find('.underlayer').height()
       top = position.top - 15 - @height()
       @addClass('arrow-down')
 
