@@ -8,7 +8,7 @@ module.exports =
       {label, command} = definition
 
       definitions = atom.contextMenu.definitions['.overlayer']
-      hasItem = true for item in definitions when item.label is label and item.command is xcommand
+      hasItem = true for item in definitions when item.label is label and item.command is command
 
       if condition()
         definitions.unshift {label, command} unless hasItem
