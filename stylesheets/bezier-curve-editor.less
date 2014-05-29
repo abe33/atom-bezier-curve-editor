@@ -56,6 +56,11 @@
   padding: 0;
   margin-left: 0;
 
+  select {
+    width: 100%;
+    margin: 4px 0 0;
+  }
+
   &:before {
     position: absolute;
     content: '';
@@ -114,10 +119,10 @@
     display: block;
     margin: 4px;
     overflow: hidden;
-    .btn {
+    .btn-icon {
       width: 20%;
 
-      & + .btn {
+      & + .btn-icon {
         width: -webkit-calc(~'20% + 1px');
       }
 

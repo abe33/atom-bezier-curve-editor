@@ -2,21 +2,36 @@
 Delegator = require 'delegato'
 CurveView = require './curve-view'
 BezierTimingView = require './bezier-timing-view'
-{easing} = require './bezier-functions'
+{easing, extraEasing} = require './bezier-functions'
+
+humanize = (str) ->
+  str
+  .split('_')
+  .map((s) -> s.replace(/^./, (m) -> m.toUpperCase()))
+  .join(' ')
 
 module.exports =
 class BezierCurveEditorView extends View
   Delegator.includeInto(this)
 
   @content: ->
-    @div class: 'bezier-curve-editor overlay', =>
+    @div class: 'bezier-curve-editor overlay native-key-bindings', tabIndex: -1,  =>
       @subview 'curveView', new CurveView()
       @subview 'timingView', new BezierTimingView()
 
       @div class: 'patterns btn-group', =>
         for name,spline of easing
-          @button outlet: name, class: 'btn btn-sm', =>
+          @button outlet: name, class: 'btn btn-icon btn-sm', =>
             @i class: 'easing-' + name.replace(/_/g, '-')
+
+        @div class: 'block', =>
+          @tag 'select', outlet: 'easingSelect', =>
+            @tag 'option', value: '', 'More easings...'
+
+            for group, splines of extraEasing
+              @tag 'optgroup', label: humanize(group), =>
+                for name, spline of splines
+                  @tag 'option', value: group + ':' + name, humanize(group + ' ' + name)
 
       @div class: 'actions btn-group', =>
         @button outlet: 'cancelButton', class: 'btn', 'Cancel'
@@ -27,6 +42,16 @@ class BezierCurveEditorView extends View
   initialize: (serializeState) ->
     @curveView.on 'spline:changed', =>
       @timingView.setSpline @curveView.getSpline()
+
+    @subscribe @easingSelect, 'change', =>
+      value = @easingSelect.val()
+      if value isnt ''
+        [group, name] = value.split(':')
+
+        @setSpline.apply this, extraEasing[group][name]
+        @timingView.setSpline extraEasing[group][name]
+        @renderSpline()
+
 
     Object.keys(easing).forEach (name) =>
       button = @[name]
