@@ -2,7 +2,7 @@
   "name": "bezier-curve-editor",
   "main": "./lib/bezier-curve-editor",
   "version": "0.5.1",
-  "description": "A short description of your package",
+  "description": "A bezier curve editor with common curves built-in.",
   "repository": "https://github.com/abe33/atom-bezier-curve-editor",
   "license": "MIT",
   "engines": {
