@@ -1,3 +1,10 @@
+<a name="v0.6.0"></a>
+# v0.6.0 (2014-10-01)
+
+## :sparkles: Features
+
+- Implement support for the new context menu shouldDisplay option ([96880e80](https://github.com/abe33/atom-bezier-curve-editor/commit/96880e802fc374db892abcf3b05d6d614905701d))
+
 <a name="v0.5.0"></a>
 # v0.5.0 (2014-05-29)
 
