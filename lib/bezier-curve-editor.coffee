@@ -1,7 +1,6 @@
 Debug = require 'prolix'
 {Subscriber} = require 'emissary'
 BezierCurveEditorView = require './bezier-curve-editor-view'
-ConditionalContextMenu = require './conditional-contextmenu'
 
 module.exports = new
 class BezierCurveEditor
@@ -18,10 +17,14 @@ class BezierCurveEditor
     @active = true
     atom.workspaceView.command "bezier-curve-editor:open", => @open true
 
-    ConditionalContextMenu.item {
-      label: 'Edit Bezier Curve'
+    self = this
+
+    atom.contextMenu.add '.editor': [{
+      label: 'Edit Bezier Curve',
       command: 'bezier-curve-editor:open',
-    }, => return true if @match = @getMatchAtCursor()
+      shouldDisplay: (event) ->
+        return true if self.match = self.getMatchAtCursor()
+    }]
 
     @view = new BezierCurveEditorView
 
@@ -126,7 +129,7 @@ class BezierCurveEditor
   getSplineCSS: (spline) ->
     precision = 100000
     spline = spline.map (n) -> Math.floor(n * precision) / precision
-    
+
     "cubic-bezier(#{ spline.join ', ' })"
 
   open: (getMatch = false) ->
