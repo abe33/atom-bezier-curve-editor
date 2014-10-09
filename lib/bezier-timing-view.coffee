@@ -1,4 +1,4 @@
-{$, View, EditorView} = require 'atom'
+{$, View} = require 'atom'
 
 module.exports =
 class BezierTimingView extends View
@@ -6,8 +6,6 @@ class BezierTimingView extends View
     @div class: 'bezier-timing-preview', =>
       @div class: 'bezier-timing-ramp', =>
         @div outlet: 'dummy', class: 'bezier-timing-dummy'
-
-      # @subview 'durationEditor', new EditorView(mini: true)
 
   duration: 500
   # initialize: ->
