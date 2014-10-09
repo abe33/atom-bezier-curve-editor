@@ -70,7 +70,7 @@ class BezierCurveEditorView extends View
     view = atom.workspaceView.getActiveView()
 
     cursor = view.editor.getCursorScreenPosition()
-    position = view.pixelPositionForScreenPosition cursor
+    position = view.editor.pixelPositionForScreenPosition cursor
     offset = view.offset()
     gutterWidth = view.find('.gutter').width()
 

@@ -6,7 +6,8 @@ describe "BezierCurveEditorView", ->
     runs ->
       atom.workspaceView = new WorkspaceView
       atom.workspaceView.attachToDom()
-      atom.workspaceView.openSync('sample.js')
+
+    waitsForPromise -> atom.workspaceView.open('sample.js')
 
     runs ->
       @editorView = atom.workspaceView.getActiveView()

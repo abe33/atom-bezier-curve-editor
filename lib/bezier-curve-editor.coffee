@@ -44,7 +44,7 @@ class BezierCurveEditor
     editor = atom.workspace.getActiveEditor()
     return unless editor?
 
-    line = editor.getCursor().getCurrentBufferLine()
+    line = editor.getLastCursor().getCurrentBufferLine()
     cursorBuffer = editor.getCursorBufferPosition()
     cursorRow = cursorBuffer.row
     cursorColumn = cursorBuffer.column
