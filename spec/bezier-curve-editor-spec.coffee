@@ -12,7 +12,7 @@ describe "BezierCurveEditor", ->
 
     runs ->
       @editorView = atom.workspaceView.getActiveView()
-      @editorView.setText("cubic-bezier(0.3, 0, 0.7, 1)")
+      @editorView.setText("cubic-bezier(0.3, 0, .7, 1)")
       @editorView.editor.setCursorBufferPosition([4,0])
 
     waitsForPromise ->

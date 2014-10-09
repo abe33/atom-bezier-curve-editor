@@ -55,16 +55,17 @@ class BezierCurveEditor
     return matchAtPos
 
   matchesOnLine: (line, cursorRow) ->
+    float = '(\\d+|\\d?\\.\\d+)'
     regex = ///
       cubic-bezier\s*
       \(\s*
-        (\d+(\.\d+)?)
+        (#{float})
         \s*,\s*
-        (-?\d+(\.\d+)?)
+        (-?#{float})
         \s*,\s*
-        (\d+(\.\d+)?)
+        (#{float})
         \s*,\s*
-        (-?\d+(\.\d+)?)
+        (-?#{float})
       \s*\)
     ///g
 
