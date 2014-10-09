@@ -1,3 +1,11 @@
+<a name="v0.6.1"></a>
+# v0.6.1 (2014-10-09)
+
+## :bug: Bug Fixes
+
+- Fix all deprecations ([cc507c6c](https://github.com/abe33/atom-bezier-curve-editor/commit/cc507c6c26c6639eac7068f09d9dc8d2e91abae9))
+- Fix issue with floats without numerator ([289f9dc2](https://github.com/abe33/atom-bezier-curve-editor/commit/289f9dc2ec1f639cf9cb013f21374397f443d1d1), [#5](https://github.com/abe33/atom-bezier-curve-editor/issues/5))
+
 <a name="v0.6.0"></a>
 # v0.6.0 (2014-10-01)
 
