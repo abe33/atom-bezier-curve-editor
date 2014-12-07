@@ -1,4 +1,4 @@
-{$, View} = require 'atom'
+{$, View} = require 'atom-space-pen-views'
 Delegator = require 'delegato'
 CurveView = require './curve-view'
 BezierTimingView = require './bezier-timing-view'
@@ -43,7 +43,7 @@ class BezierCurveEditorView extends View
     @curveView.on 'spline:changed', =>
       @timingView.setSpline @curveView.getSpline()
 
-    @subscribe @easingSelect, 'change', =>
+    @easingSelect.on 'change', =>
       value = @easingSelect.val()
       if value isnt ''
         [group, name] = value.split(':')
@@ -52,11 +52,10 @@ class BezierCurveEditorView extends View
         @timingView.setSpline extraEasing[group][name]
         @renderSpline()
 
-
     Object.keys(easing).forEach (name) =>
       button = @[name]
-      button.setTooltip(name.replace /_/g, '-')
-      @subscribe button, 'click', =>
+      # button.setTooltip(name.replace /_/g, '-')
+      button.on 'click', =>
         @setSpline.apply this, easing[name]
         @timingView.setSpline easing[name]
         @renderSpline()
@@ -67,12 +66,14 @@ class BezierCurveEditorView extends View
     @subscribeToOutsideEvent()
     @removeClass('arrow-down')
 
-    view = atom.workspaceView.getActiveView()
+    view = @getActiveEditorView()
+    $view = $(view)
+    editor = @getActiveEditor()
 
-    cursor = view.editor.getCursorScreenPosition()
-    position = view.editor.pixelPositionForScreenPosition cursor
-    offset = view.offset()
-    gutterWidth = view.find('.gutter').width()
+    cursor = editor.getCursorScreenPosition()
+    position = editor.pixelPositionForScreenPosition cursor
+    offset = $view.offset()
+    gutterWidth = $view.find('.gutter').width()
 
     top = position.top + view.lineHeight + 15
     left = position.left + gutterWidth - @width() / 2
@@ -88,12 +89,11 @@ class BezierCurveEditorView extends View
     @curveView.dummy1.activate()
     @curveView.dummy2.activate()
 
-
   subscribeToOutsideEvent: ->
     $body = @parents('body')
 
     @on 'mousedown', (e) -> e.stopImmediatePropagation()
-    @subscribe $body, 'mousedown', @closeIfClickedOutside
+    $body.on 'mousedown', @closeIfClickedOutside
 
   closeIfClickedOutside: (e) =>
     $target = $(e.target)
@@ -101,12 +101,18 @@ class BezierCurveEditorView extends View
     @close() if $target.parents('.bezier-curve-editor').length is 0
 
   attach: ->
-    atom.workspaceView.getActiveView().overlayer.append(this)
+    @getActiveEditorView().querySelector('.overlayer').appendChild(@element)
+
+  getActiveEditor: -> atom.workspace.getActiveEditor()
+
+  getActiveEditorView: -> atom.views.getView(@getActiveEditor())
 
   close: ->
     @detach()
     @curveView.dummy1.deactivate()
     @curveView.dummy2.deactivate()
 
-  destroy: -> @close()
-  getModel: -> {}
+  destroy: ->
+    @curveView.off()
+    @easingSelect.off()
+    @close()

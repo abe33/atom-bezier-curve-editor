@@ -1,44 +1,36 @@
-Debug = require 'prolix'
-{Subscriber} = require 'emissary'
+{Disposable} = require 'event-kit'
 BezierCurveEditorView = require './bezier-curve-editor-view'
 
-module.exports = new
-class BezierCurveEditor
-  Debug('bezier-curve-editor', true).includeInto(this)
-  Subscriber.includeInto(this)
-
+module.exports=
   view: null
   match: null
-  active: false
 
   activate: ->
-    return if @active
-
-    @active = true
-    atom.workspaceView.command "bezier-curve-editor:open", => @open true
-
-    self = this
+    atom.commands.add 'atom-workspace',
+      'bezier-curve-editor:open': => @open true
 
     atom.contextMenu.add '.editor': [{
       label: 'Edit Bezier Curve',
       command: 'bezier-curve-editor:open',
-      shouldDisplay: (event) ->
-        return true if self.match = self.getMatchAtCursor()
+      shouldDisplay: (event) =>
+        return true if @match = @getMatchAtCursor()
     }]
 
     @view = new BezierCurveEditorView
 
-    @subscribe @view.cancelButton, 'click', => @view.close()
-    @subscribe @view.validateButton, 'click', =>
+    @view.cancelButton.on 'click', => @view.close()
+    @view.validateButton.on 'click', =>
       spline = @view.getSpline()
       @replaceMatch(spline)
       @view.close()
 
-  deactivate: ->
-    return unless @active
+    @subscription = new Disposable =>
+      @view.cancelButton.off 'click'
+      @view.validateButton.off 'click'
 
-    @active = false
+  deactivate: ->
     @view.destroy()
+    @subscription.dispose()
 
   getMatchAtCursor: ->
     editor = atom.workspace.getActiveEditor()

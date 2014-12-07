@@ -1,31 +1,28 @@
-{WorkspaceView} = require 'atom'
 BezierCurveEditor = require '../lib/bezier-curve-editor'
 
 describe "BezierCurveEditor", ->
+  [workspaceElement, editor, editorView] = []
+
   afterEach -> BezierCurveEditor.deactivate()
 
   beforeEach ->
-    runs ->
-      atom.workspaceView = new WorkspaceView
-      atom.workspaceView.attachToDom()
-
-    waitsForPromise -> atom.workspaceView.open('sample.js')
+    waitsForPromise -> atom.workspace.open('sample.js')
 
     runs ->
-      @editorView = atom.workspaceView.getActiveView()
-      @editorView.setText("cubic-bezier(0.3, 0, .7, 1)")
-      @editorView.editor.setCursorBufferPosition([4,0])
+      workspaceElement = atom.views.getView(atom.workspace)
+      editor = atom.workspace.getActiveTextEditor()
+      editorView = atom.views.getView(editor)
+
+      editor.setText("cubic-bezier(0.3, 0, 0.7, 1)")
+      editor.setCursorBufferPosition([4,0])
 
     waitsForPromise ->
       atom.packages.activatePackage('bezier-curve-editor')
 
-  it 'should be active', ->
-    expect(BezierCurveEditor.active).toBeTruthy()
-
   describe 'triggering the open command', ->
     beforeEach ->
       runs ->
-        atom.workspaceView.trigger 'bezier-curve-editor:open'
+        atom.commands.dispatch workspaceElement, 'bezier-curve-editor:open'
 
     it 'should have opened the view', ->
-      expect(atom.workspaceView.find('.bezier-curve-editor').length).toEqual(1)
+      expect(editorView.querySelector('.bezier-curve-editor')).toBeDefined()

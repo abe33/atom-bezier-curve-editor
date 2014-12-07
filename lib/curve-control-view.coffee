@@ -1,5 +1,4 @@
-{View, $} = require 'atom'
-{Emitter} = require 'emissary'
+{View, $} = require 'atom-space-pen-views'
 
 module.exports =
 class CurveControlView extends View
@@ -11,12 +10,11 @@ class CurveControlView extends View
 
   activate: ->
     @on 'mousedown', @onMouseDown
-    @subscribe $('body'), 'mousemove', @onMouseMove
-    @subscribe $('body'), 'mouseup', @onMouseUp
+    $('body').on 'mousemove', @onMouseMove
+    $('body').on 'mouseup', @onMouseUp
 
   deactivate: ->
     @off
-    @unsubscribe()
 
   destroy: ->
     @deactivate()

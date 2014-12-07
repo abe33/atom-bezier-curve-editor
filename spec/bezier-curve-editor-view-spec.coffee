@@ -1,29 +1,29 @@
-BezierCurveEditorView = require '../lib/bezier-curve-editor-view'
-{WorkspaceView} = require 'atom'
+{buildMouseEvent} = require './spec-helper'
 
 describe "BezierCurveEditorView", ->
+  [workspaceElement, editor, editorView] = []
+
   beforeEach ->
-    runs ->
-      atom.workspaceView = new WorkspaceView
-      atom.workspaceView.attachToDom()
-
-    waitsForPromise -> atom.workspaceView.open('sample.js')
+    waitsForPromise -> atom.workspace.open('sample.js')
 
     runs ->
-      @editorView = atom.workspaceView.getActiveView()
-      @editorView.setText("cubic-bezier(0.3, 0, 0.7, 1)")
-      @editorView.editor.setCursorBufferPosition([4,0])
+      workspaceElement = atom.views.getView(atom.workspace)
+      editor = atom.workspace.getActiveTextEditor()
+      editorView = atom.views.getView(editor)
+
+      editor.setText("cubic-bezier(0.3, 0, 0.7, 1)")
+      editor.setCursorBufferPosition([4,0])
 
     waitsForPromise ->
       atom.packages.activatePackage('bezier-curve-editor')
 
     runs ->
-      atom.workspaceView.trigger 'bezier-curve-editor:open'
+      atom.commands.dispatch(editorView, 'bezier-curve-editor:open')
 
   describe 'clicking outside the panel', ->
     beforeEach ->
       runs ->
-        atom.workspaceView.trigger('mousedown')
+        editorView.dispatchEvent(buildMouseEvent('mousedown'))
 
     it 'should have removed the view', ->
-      expect(atom.workspaceView.find('.bezier-curve-editor').length).toEqual(0)
+      expect(editorView.querySelector('.bezier-curve-editor')).toBeDefined()

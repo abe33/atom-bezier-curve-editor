@@ -12,6 +12,8 @@
     "delegato": "1.x",
     "mixto": "1.x",
     "emissary": "1.x",
-    "prolix": "1.x"
+    "prolix": "1.x",
+    "event-kit": "^0",
+    "atom-space-pen-views": ">= 0.20.0"
   }
 }

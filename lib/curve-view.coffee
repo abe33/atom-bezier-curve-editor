@@ -1,4 +1,4 @@
-{View} = require 'atom'
+{$, View} = require 'atom-space-pen-views'
 
 {UnitBezier} = require './bezier-functions'
 CurveControlView = require './curve-control-view'
@@ -27,11 +27,11 @@ class CurveView extends View
       @subview 'dummy2', new CurveControlView minX, maxX, minY, maxY
 
   initialize: ->
-    @subscribe @dummy1, 'drag', @control1Changed
-    @subscribe @dummy2, 'drag', @control2Changed
-    
-    @subscribe @dummy1, 'drag:end', => @trigger 'spline:changed'
-    @subscribe @dummy2, 'drag:end', => @trigger 'spline:changed'
+    @dummy1.on 'drag', @control1Changed
+    @dummy2.on 'drag', @control2Changed
+
+    @dummy1.on 'drag:end', => @trigger 'spline:changed'
+    @dummy2.on 'drag:end', => @trigger 'spline:changed'
 
   constructor: ->
     super
@@ -49,11 +49,12 @@ class CurveView extends View
   setSpline: (@x1, @y1, @x2, @y2) ->
 
   cleanCanvas: ->
-    statusBar = atom.workspaceView.find('.status-bar')
+    statusBar = $('.status-bar')
     @context.fillStyle = statusBar.css('background-color')
+    console.log statusBar.css('background-color')
     @context.fillRect(0, 0, @canvasWidth, @canvasWidth)
 
-    @context.strokeStyle = atom.workspaceView.css('color')
+    @context.strokeStyle = $('atom-workspace').css('color')
     @context.beginPath()
     @context.moveTo(@canvasPadding, @canvasPadding)
     @context.lineTo(@canvasPadding, @canvasHeightMinusPadding)
@@ -72,7 +73,7 @@ class CurveView extends View
       left: @canvasPadding + @x2 * @curveSpaceWidth
 
   renderControls: ->
-    statusBar = atom.workspaceView.find('.status-bar')
+    statusBar = $('.status-bar')
     @context.strokeStyle = statusBar.css('color')
 
     @context.beginPath()
