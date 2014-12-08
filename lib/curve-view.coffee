@@ -43,18 +43,17 @@ class CurveView extends View
     @canvasHeightMinusPadding = @canvasHeight - @canvasPadding
     @curveSpaceWidth = @canvasWidth - @canvasPadding * 2
     @curveSpaceHeight = @canvasHeight - @canvasPadding * 2
+    @cleanCanvas()
 
   getSpline: -> [@x1, @y1, @x2, @y2]
 
   setSpline: (@x1, @y1, @x2, @y2) ->
 
   cleanCanvas: ->
-    statusBar = $('.status-bar')
-    @context.fillStyle = statusBar.css('background-color')
-    console.log statusBar.css('background-color')
+    @context.fillStyle = @parent().css('background-color')
     @context.fillRect(0, 0, @canvasWidth, @canvasWidth)
 
-    @context.strokeStyle = $('atom-workspace').css('color')
+    @context.strokeStyle = @parent().css('color')
     @context.beginPath()
     @context.moveTo(@canvasPadding, @canvasPadding)
     @context.lineTo(@canvasPadding, @canvasHeightMinusPadding)
@@ -93,24 +92,25 @@ class CurveView extends View
     @context.stroke()
 
   renderSpline: ->
-    @cleanCanvas()
-    @updateDummies()
-    @renderControls()
+    requestAnimationFrame =>
+      @cleanCanvas()
+      @updateDummies()
+      @renderControls()
 
-    @context.strokeStyle = '#ff0000'
-    @context.beginPath()
-    @context.moveTo(@canvasPadding, @canvasHeightMinusPadding)
+      @context.strokeStyle = '#ff0000'
+      @context.beginPath()
+      @context.moveTo(@canvasPadding, @canvasHeightMinusPadding)
 
-    spline = new UnitBezier @x1, @y1, @x2, @y2
+      spline = new UnitBezier @x1, @y1, @x2, @y2
 
-    for n in [0..50]
-      r = n / 50
-      x = @canvasPadding + r * @curveSpaceWidth
-      curveY = spline.solve(r, spline.epsilon)
-      y = @canvasHeightMinusPadding - curveY * @curveSpaceHeight
-      @context.lineTo(x, y)
+      for n in [0..50]
+        r = n / 50
+        x = @canvasPadding + r * @curveSpaceWidth
+        curveY = spline.solve(r, spline.epsilon)
+        y = @canvasHeightMinusPadding - curveY * @curveSpaceHeight
+        @context.lineTo(x, y)
 
-    @context.stroke()
+      @context.stroke()
 
   control1Changed: (e, {x, y}) =>
     @x1 = x
