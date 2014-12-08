@@ -2,10 +2,10 @@
 @import "ui-variables";
 
 @font-face {
-	font-family: 'css-easing';
-	src:url('atom://bezier-curve-editor/resources/css-easing.woff') format('woff');
-	font-weight: normal;
-	font-style: normal;
+  font-family: 'css-easing';
+  src:url('atom://bezier-curve-editor/resources/css-easing.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
 }
 
 @-webkit-keyframes preview {
@@ -18,31 +18,31 @@
 }
 
 [class^="easing-"], [class*=" easing-"] {
-	font-family: 'css-easing';
-	speak: none;
-	font-style: normal;
-	font-weight: normal;
-	font-variant: normal;
-	text-transform: none;
-	line-height: 1;
+  font-family: 'css-easing';
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
 
-	-webkit-font-smoothing: antialiased;
+  -webkit-font-smoothing: antialiased;
 }
 
 .easing-linear:before {
-	content: "\e600";
+  content: "\e600";
 }
 .easing-ease:before {
-	content: "\e601";
+  content: "\e601";
 }
 .easing-ease-out:before {
-	content: "\e602";
+  content: "\e602";
 }
 .easing-ease-in:before {
-	content: "\e603";
+  content: "\e603";
 }
 .easing-ease-in-out:before {
-	content: "\e604";
+  content: "\e604";
 }
 
 
@@ -52,9 +52,14 @@
   padding: 0;
   margin-left: 0;
 
-  select {
+
+  select.form-control {
     width: 100%;
     margin: 4px 0 0;
+    background: @input-background-color;
+    border: 1px solid @input-border-color;
+    color: @text-color;
+    font-family: @font-family;
   }
 
   &:before {

@@ -25,7 +25,7 @@ class BezierCurveEditorView extends View
             @i class: 'easing-' + name.replace(/_/g, '-')
 
         @div class: 'block', =>
-          @tag 'select', outlet: 'easingSelect', =>
+          @tag 'select', class: 'form-control', outlet: 'easingSelect', =>
             @tag 'option', value: '', 'More easings...'
 
             for group, splines of extraEasing
