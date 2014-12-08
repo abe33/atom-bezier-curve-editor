@@ -1,3 +1,11 @@
+<a name="v0.6.2"></a>
+# v0.6.2 (2014-12-08)
+
+## :bug: Bug Fixes
+
+- Fix bad redraw of canvas background ([cdd5dbea](https://github.com/abe33/atom-bezier-curve-editor/commit/cdd5dbeae9e7fda02afbd4f3d35b9b2863332ebe))
+- Fix deprecations and broken API access.
+
 <a name="v0.6.1"></a>
 # v0.6.1 (2014-10-09)
 
