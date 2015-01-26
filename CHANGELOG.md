@@ -1,3 +1,11 @@
+<a name="v0.6.4"></a>
+# v0.6.4 (2015-01-26)
+
+## :bug: Bug Fixes
+
+- Fix selectors deprecations ([adbbdbf4](https://github.com/abe33/atom-bezier-curve-editor/commit/adbbdbf4bd65c6a7744a1e17f23933e34eb4db5c))
+
+
 <a name="v0.6.3"></a>
 # v0.6.3 (2015-01-26)
 
