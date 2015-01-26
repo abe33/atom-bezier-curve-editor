@@ -71,7 +71,7 @@ class BezierCurveEditorView extends View
     editor = @getActiveEditor()
 
     cursor = editor.getCursorScreenPosition()
-    position = editor.pixelPositionForScreenPosition cursor
+    position = view.pixelPositionForScreenPosition cursor
     offset = $view.offset()
     gutterWidth = $view.find('.gutter').width()
 
@@ -103,7 +103,7 @@ class BezierCurveEditorView extends View
   attach: ->
     @getActiveEditorView().querySelector('.overlayer').appendChild(@element)
 
-  getActiveEditor: -> atom.workspace.getActiveEditor()
+  getActiveEditor: -> atom.workspace.getActiveTextEditor()
 
   getActiveEditorView: -> atom.views.getView(@getActiveEditor())
 

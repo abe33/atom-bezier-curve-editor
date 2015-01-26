@@ -33,7 +33,7 @@ module.exports=
     @subscription.dispose()
 
   getMatchAtCursor: ->
-    editor = atom.workspace.getActiveEditor()
+    editor = atom.workspace.getActiveTextEditor()
     return unless editor?
 
     line = editor.getLastCursor().getCurrentBufferLine()
@@ -92,7 +92,7 @@ module.exports=
     return matchResults
 
   selectMatch: ->
-    editor = atom.workspace.getActiveEditor()
+    editor = atom.workspace.getActiveTextEditor()
 
     editor.clearSelections()
     editor.addSelectionForBufferRange
