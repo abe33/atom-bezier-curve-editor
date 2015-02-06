@@ -46,12 +46,17 @@
 }
 
 
-.bezier-curve-editor.overlay {
+atom-pane .bezier-curve-editor {
   position: absolute;
   width: auto;
   padding: 0;
   margin-left: 0;
 
+  .block {
+    // clear for top-margin on the select element
+    padding: 1px 0 0 0;
+    clear: both;
+  }
 
   select.form-control {
     width: 100%;
@@ -86,6 +91,14 @@
 
   .btn {
     font-family: 'Lucida Grande', 'Segoe UI', sans-serif;
+  }
+
+  .btn-group {
+    &:after {
+      content: '';
+      display: table;
+      clear: both;
+    }
   }
 
   .bezier-timing-preview {
@@ -131,6 +144,7 @@
       }
     }
   }
+
   .actions {
     display: block;
     position: relative;
