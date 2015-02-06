@@ -1,3 +1,10 @@
+<a name="v0.6.5"></a>
+# v0.6.5 (2015-02-06)
+
+## :bug: Bug Fixes
+
+- Fix remaining deprecations
+
 <a name="v0.6.4"></a>
 # v0.6.4 (2015-01-26)
 
