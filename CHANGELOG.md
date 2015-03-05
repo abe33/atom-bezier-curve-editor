@@ -1,3 +1,10 @@
+<a name="0.6.6"></a>
+# 0.6.6 (2015-03-05)
+
+## :bug: Bug Fixes
+
+- Fix positioning issues ([a77686db](https://github.com/abe33/atom-bezier-curve-editor/commit/a77686db867aaee800667584c7703425f109e3b2))
+
 <a name="v0.6.5"></a>
 # v0.6.5 (2015-02-06)
 
