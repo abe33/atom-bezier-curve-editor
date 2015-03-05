@@ -75,10 +75,10 @@ class BezierCurveEditorView extends View
     offset = $view.offset()
     gutterWidth = $view.find('.gutter').width()
 
-    top = position.top + 15
+    top = position.top + editor.getLineHeightInPixels() + 15
     left = position.left + gutterWidth - @width() / 2
 
-    if top + @height() > @parents('.scroll-view').find('.underlayer').height()
+    if top + @height() > @getTextEditorHeight()
       top = position.top - 15 - @height()
       @addClass('arrow-down')
 
@@ -88,6 +88,11 @@ class BezierCurveEditorView extends View
 
     @curveView.dummy1.activate()
     @curveView.dummy2.activate()
+
+  getTextEditorHeight: ->
+    editor = @getActiveEditorView()
+    root = editor.shadowRoot ? editor
+    root.querySelector('.lines').offsetHeight
 
   subscribeToOutsideEvent: ->
     $body = @parents('body')
