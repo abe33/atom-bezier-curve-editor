@@ -75,7 +75,7 @@ class BezierCurveEditorView extends View
     offset = $view.offset()
     gutterWidth = $view.find('.gutter').width()
 
-    top = position.top + view.lineHeight + 15
+    top = position.top + 15
     left = position.left + gutterWidth - @width() / 2
 
     if top + @height() > @parents('.scroll-view').find('.underlayer').height()
