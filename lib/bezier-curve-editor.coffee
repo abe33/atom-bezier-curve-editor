@@ -1,36 +1,33 @@
-{Disposable} = require 'event-kit'
-BezierCurveEditorView = require './bezier-curve-editor-view'
+{CompositeDisposable, Disposable} = require 'atom'
+BezierCurveEditorElement = require './bezier-curve-editor-element'
 
 module.exports=
   view: null
   match: null
 
   activate: ->
-    atom.commands.add 'atom-workspace',
+    @subscriptions = new CompositeDisposable
+    @subscriptions.add atom.commands.add 'atom-workspace',
       'bezier-curve-editor:open': => @open true
 
-    atom.contextMenu.add '.editor': [{
+    @subscriptions.add atom.contextMenu.add '.editor': [{
       label: 'Edit Bezier Curve',
       command: 'bezier-curve-editor:open',
       shouldDisplay: (event) =>
         return true if @match = @getMatchAtCursor()
     }]
 
-    @view = new BezierCurveEditorView
+    @view = new BezierCurveEditorElement
 
-    @view.cancelButton.on 'click', => @view.close()
-    @view.validateButton.on 'click', =>
+    @subscriptions.add @view.onDidCancel => @view.close()
+    @subscriptions.add @view.onDidConfirm =>
       spline = @view.getSpline()
       @replaceMatch(spline)
       @view.close()
 
-    @subscription = new Disposable =>
-      @view.cancelButton.off 'click'
-      @view.validateButton.off 'click'
-
   deactivate: ->
     @view.destroy()
-    @subscription.dispose()
+    @subscriptions.dispose()
 
   getMatchAtCursor: ->
     editor = atom.workspace.getActiveTextEditor()

@@ -1,6 +1,6 @@
 {buildMouseEvent} = require './spec-helper'
 
-describe "BezierCurveEditorView", ->
+describe "BezierCurveEditorElement", ->
   [workspaceElement, editor, editorView] = []
 
   beforeEach ->
@@ -26,4 +26,4 @@ describe "BezierCurveEditorView", ->
         editorView.dispatchEvent(buildMouseEvent('mousedown'))
 
     it 'should have removed the view', ->
-      expect(editorView.querySelector('.bezier-curve-editor')).toBeDefined()
+      expect(editorView.querySelector('bezier-curve-editor')).toBeDefined()

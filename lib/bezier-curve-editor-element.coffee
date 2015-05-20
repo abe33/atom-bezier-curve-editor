@@ -1,7 +1,8 @@
-{$, View} = require 'atom-space-pen-views'
+{SpacePenDSL, EventsDelegation, AncestorsMethods} = require 'atom-utils'
+{CompositeDisposable, Emitter} = require 'atom'
 Delegator = require 'delegato'
-CurveView = require './curve-view'
-BezierTimingView = require './bezier-timing-view'
+CurveElement = require './curve-element'
+BezierTimingElement = require './bezier-timing-element'
 {easing, extraEasing} = require './bezier-functions'
 
 humanize = (str) ->
@@ -11,13 +12,15 @@ humanize = (str) ->
   .join(' ')
 
 module.exports =
-class BezierCurveEditorView extends View
+class BezierCurveEditorElement extends HTMLElement
   Delegator.includeInto(this)
+  SpacePenDSL.includeInto(this)
+  EventsDelegation.includeInto(this)
 
   @content: ->
-    @div class: 'bezier-curve-editor overlay native-key-bindings', tabIndex: -1,  =>
-      @subview 'curveView', new CurveView()
-      @subview 'timingView', new BezierTimingView()
+    @div =>
+      @tag 'bezier-curve', outlet: 'curveView'
+      @tag 'bezier-curve-timing', outlet: 'timingView'
 
       @div class: 'patterns btn-group', =>
         for name,spline of easing
@@ -39,12 +42,19 @@ class BezierCurveEditorView extends View
 
   @delegatesMethods 'getSpline', 'setSpline', 'renderSpline', toProperty: 'curveView'
 
-  initialize: (serializeState) ->
-    @curveView.on 'spline:changed', =>
+  createdCallback: ->
+    @classList.add 'overlay'
+    @classList.add 'native-key-bindings'
+    @setAttribute('tabindex', -1)
+
+    @subscriptions = new CompositeDisposable
+    @emitter = new Emitter
+
+    @subscriptions.add @curveView.onDidChangeSpline =>
       @timingView.setSpline @curveView.getSpline()
 
-    @easingSelect.on 'change', =>
-      value = @easingSelect.val()
+    @subscriptions.add @subscribeTo @easingSelect, 'change': =>
+      value = @easingSelect.value
       if value isnt ''
         [group, name] = value.split(':')
 
@@ -52,38 +62,50 @@ class BezierCurveEditorView extends View
         @timingView.setSpline extraEasing[group][name]
         @renderSpline()
 
+    @subscriptions.add @subscribeTo @cancelButton, 'click': =>
+      @emitter.emit('did-cancel')
+
+    @subscriptions.add @subscribeTo @validateButton, 'click': =>
+      @emitter.emit('did-confirm')
+
     Object.keys(easing).forEach (name) =>
       button = @[name]
       # button.setTooltip(name.replace /_/g, '-')
-      button.on 'click', =>
+      @subscriptions.add @subscribeTo button, 'click': =>
         @setSpline.apply this, easing[name]
         @timingView.setSpline easing[name]
         @renderSpline()
+
+  onDidCancel: (callback) ->
+    @emitter.on 'did-cancel', callback
+
+  onDidConfirm: (callback) ->
+    @emitter.on 'did-confirm', callback
 
   open: ->
     @attach()
 
     @subscribeToOutsideEvent()
-    @removeClass('arrow-down')
+    @classList.remove('arrow-down')
 
     view = @getActiveEditorView()
-    $view = $(view)
     editor = @getActiveEditor()
+    offset = view.getBoundingClientRect()
 
     cursor = editor.getCursorScreenPosition()
     position = view.pixelPositionForScreenPosition cursor
-    offset = $view.offset()
-    gutterWidth = $view.find('.gutter').width()
+    gutterWidth = view.shadowRoot.querySelector('.gutter').offsetWidth
 
     top = position.top + editor.getLineHeightInPixels() + 15
-    left = position.left + gutterWidth - @width() / 2
+    left = position.left + gutterWidth - @offsetWidth / 2
 
-    if top + @height() > @getTextEditorHeight()
-      top = position.top - 15 - @height()
-      @addClass('arrow-down')
+    if top + @offsetHeight > @getTextEditorHeight()
+      top = position.top - 15 - @offsetHeight
+      @classList.add('arrow-down')
 
-    @css {top, left}
-    # @timingView.durationEditor.focus()
+    @style.top = top + 'px'
+    @style.left = left + 'px'
+
     @timingView.setSpline @getSpline()
 
     @curveView.dummy1.activate()
@@ -95,18 +117,17 @@ class BezierCurveEditorView extends View
     root.querySelector('.lines').offsetHeight
 
   subscribeToOutsideEvent: ->
-    $body = @parents('body')
+    @subscriptions.add @subscribeTo this, 'mousedown': (e) ->
+      e.stopImmediatePropagation()
+    @subscriptions.add @subscribeTo document.body, 'mousedown': (e) =>
+      @closeIfClickedOutside(e)
 
-    @on 'mousedown', (e) -> e.stopImmediatePropagation()
-    $body.on 'mousedown', @closeIfClickedOutside
-
-  closeIfClickedOutside: (e) =>
-    $target = $(e.target)
-
-    @close() if $target.parents('.bezier-curve-editor').length is 0
+  closeIfClickedOutside: (e) ->
+    if AncestorsMethods.parents(e.target, '.bezier-curve-editor').length is 0
+      @close()
 
   attach: ->
-    @getActiveEditorView().querySelector('.overlayer').appendChild(@element)
+    @getActiveEditorView().querySelector('.overlayer').appendChild(this)
 
   getActiveEditor: -> atom.workspace.getActiveTextEditor()
 
@@ -117,7 +138,11 @@ class BezierCurveEditorView extends View
     @curveView.dummy1.deactivate()
     @curveView.dummy2.deactivate()
 
+  detach: -> @parentNode?.removeChild(this)
+
   destroy: ->
-    @curveView.off()
-    @easingSelect.off()
+    # @curveView.off()
+    # @easingSelect.off()
     @close()
+
+module.exports = BezierCurveEditorElement = document.registerElement 'bezier-curve-editor', prototype: BezierCurveEditorElement.prototype
