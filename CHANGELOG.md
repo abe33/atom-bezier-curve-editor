@@ -1,3 +1,10 @@
+<a name="v0.7.0"></a>
+# v0.7.0 (2015-05-20)
+
+## :sparkles: Features
+
+- Implement all views as custom elements ([ccb867b4](https://github.com/abe33/atom-bezier-curve-editor/commit/ccb867b4041793d7a489ddd47e34d65665f07846))
+
 <a name="0.6.6"></a>
 # 0.6.6 (2015-03-05)
 
