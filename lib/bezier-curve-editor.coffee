@@ -103,7 +103,7 @@ module.exports=
   replaceMatch: (spline) ->
     return unless @match?
 
-    editor = atom.workspace.getActiveEditor()
+    editor = atom.workspace.getActiveTextEditor()
     splineCSS = @getSplineCSS(spline)
     editor.replaceSelectedText null, -> splineCSS
 
