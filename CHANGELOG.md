@@ -1,3 +1,10 @@
+<a name="v0.7.1"></a>
+# v0.7.1 (2015-05-28)
+
+## :bug: Bug Fixes
+
+- Fix latest deprecations ([7f63d91c](https://github.com/abe33/atom-bezier-curve-editor/commit/7f63d91c933086dc1fd85d4d35da9600711747bc), [#10](https://github.com/abe33/atom-bezier-curve-editor/issues/10))
+
 <a name="v0.7.0"></a>
 # v0.7.0 (2015-05-20)
 
