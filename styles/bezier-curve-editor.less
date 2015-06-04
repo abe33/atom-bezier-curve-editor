@@ -72,27 +72,6 @@ bezier-curve-editor {
     font-family: @font-family;
   }
 
-  &:before {
-    position: absolute;
-    content: '';
-    background: @app-background-color;
-    display: block;
-    width: 14px;
-    height: 14px;
-    -webkit-transform: rotate(45deg);
-    top: -7px;
-    left: 50%;
-    margin-left: -7px;
-    z-index: 1;
-  }
-
-  &.arrow-down {
-    &:before {
-      top: initial;
-      bottom: -7px;
-    }
-  }
-
   .btn {
     font-family: 'Lucida Grande', 'Segoe UI', sans-serif;
   }

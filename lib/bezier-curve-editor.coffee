@@ -135,9 +135,8 @@ module.exports=
       parseFloat a3
       parseFloat a4
     ]
+    @selectMatch()
 
     @view.setSpline(a1, a2, a3, a4)
     @view.renderSpline()
     @view.open()
-
-    @selectMatch()

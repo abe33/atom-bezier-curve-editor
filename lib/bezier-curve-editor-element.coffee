@@ -86,35 +86,11 @@ class BezierCurveEditorElement extends HTMLElement
     @attach()
 
     @subscribeToOutsideEvent()
-    @classList.remove('arrow-down')
-
-    view = @getActiveEditorView()
-    editor = @getActiveEditor()
-    offset = view.getBoundingClientRect()
-
-    cursor = editor.getCursorScreenPosition()
-    position = view.pixelPositionForScreenPosition cursor
-    gutterWidth = view.shadowRoot.querySelector('.gutter').offsetWidth
-
-    top = position.top + editor.getLineHeightInPixels() + 15
-    left = position.left + gutterWidth - @offsetWidth / 2
-
-    if top + @offsetHeight > @getTextEditorHeight()
-      top = position.top - 15 - @offsetHeight
-      @classList.add('arrow-down')
-
-    @style.top = top + 'px'
-    @style.left = left + 'px'
 
     @timingView.setSpline @getSpline()
 
     @curveView.dummy1.activate()
     @curveView.dummy2.activate()
-
-  getTextEditorHeight: ->
-    editor = @getActiveEditorView()
-    root = editor.shadowRoot ? editor
-    root.querySelector('.lines').offsetHeight
 
   subscribeToOutsideEvent: ->
     @subscriptions.add @subscribeTo this, 'mousedown': (e) ->
@@ -127,22 +103,29 @@ class BezierCurveEditorElement extends HTMLElement
       @close()
 
   attach: ->
-    @getActiveEditorView().querySelector('.overlayer').appendChild(this)
+    editor = @getActiveEditor()
+    return if @active or not editor?
+    @destroyOverlay()
+
+    if marker = editor.getLastSelection()?.marker
+      @overlayDecoration = editor.decorateMarker(marker, {type: 'overlay', item: this, position: 'tail'})
+      @active = true
 
   getActiveEditor: -> atom.workspace.getActiveTextEditor()
-
-  getActiveEditorView: -> atom.views.getView(@getActiveEditor())
 
   close: ->
     @detach()
     @curveView.dummy1.deactivate()
     @curveView.dummy2.deactivate()
 
-  detach: -> @parentNode?.removeChild(this)
+  destroyOverlay: ->
+    @active = false
+    @overlayDecoration?.destroy()
+
+  detach: ->
+    @destroyOverlay()
 
   destroy: ->
-    # @curveView.off()
-    # @easingSelect.off()
     @close()
 
 module.exports = BezierCurveEditorElement = document.registerElement 'bezier-curve-editor', prototype: BezierCurveEditorElement.prototype
