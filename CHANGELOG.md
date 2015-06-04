@@ -1,3 +1,10 @@
+<a name="v0.7.2"></a>
+# v0.7.2 (2015-06-04)
+
+## :bug: Bug Fixes
+
+- Fix broken overlay since v0.205.0 ([bdd658ee](https://github.com/abe33/atom-bezier-curve-editor/commit/bdd658ee5d3b6d6e930d85536ffb20fc9aa5c48f))
+
 <a name="v0.7.1"></a>
 # v0.7.1 (2015-05-28)
 
